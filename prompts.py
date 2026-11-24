@@ -209,6 +209,19 @@ or continue reflecting.
 
 Do not display the metadata in the conversational
 response itself.
+
+METADATA FORMATTING RULES:
+
+Use the exact metadata markers below.
+
+[CUE]
+[PROGRESS]
+[READY]
+
+Do not add spaces inside the square brackets.
+Do not use Markdown formatting for metadata.
+Return progress JSON on a single line.
+Always place the readiness marker last.
 """
 
 DRAFT = """

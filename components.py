@@ -35,8 +35,18 @@ MASCOT_PATH = ASSETS_DIR / "mascot.png"
 # Markers used by the AI to communicate reflection metadata.
 CUE_MARKER = "[CUE]"
 
+CUE_PATTERN = re.compile(
+    r"\[\s*CUE\s*\]",
+    re.IGNORECASE
+)
+
 READINESS_PATTERN = re.compile(
-    r"\[READY\]\s*(true|false)\s*$",
+    r"\[\s*READY\s*\]\s*(true|false)\s*$",
+    re.IGNORECASE
+)
+
+PROGRESS_PATTERN = re.compile(
+    r"\[\s*PROGRESS\s*\]\s*(\{[^{}]*\})",
     re.IGNORECASE
 )
 
@@ -57,10 +67,6 @@ VALID_PROGRESS_STATES = {
     "exploring",
     "explored",
 }
-
-PROGRESS_PATTERN = re.compile(
-    r"(?m)^[ \t]*\[PROGRESS\][ \t]*(\{[^\n]*\})[ \t]*$"
-)
 
 # ============================================================
 # 3. ASSET MANAGEMENT
@@ -110,30 +116,23 @@ def extract_readiness(content: str) -> Tuple[str, bool]:
 
 def extract_cue(content: str) -> Tuple[str, str]:
     """
-    Separate the AI's conversational response from its
+    Separate the conversational response from its
     reflective cue.
 
-    Expected format:
-        What did this experience teach you?
-
-        [CUE] Exploring professional identity
-
-    Also supports the alternative format:
-        [Exploring professional identity]
-
-    Returns:
-        question: Main conversational response.
-        cue: Short explanation of its educational purpose.
+    Supports flexible spacing and capitalisation
+    in AI-generated markers.
     """
 
-    # Preferred format defined in prompts.py.
-    if CUE_MARKER in content:
-        question, cue = content.split(CUE_MARKER, 1)
+    # Preferred format: [CUE] or [ CUE ]
+    match = CUE_PATTERN.search(content)
 
-        return question.strip(), cue.strip()
+    if match:
+        question = content[:match.start()].strip()
+        cue = content[match.end():].strip()
 
-    # Fallback in case the AI returns a bracketed cue
-    # without the explicit [CUE] marker.
+        return question, cue
+
+    # Fallback for bracketed reflective cues.
     match = FALLBACK_CUE_PATTERN.search(content)
 
     if match:
@@ -142,8 +141,7 @@ def extract_cue(content: str) -> Tuple[str, str]:
 
         return question, cue
 
-    # Some messages, such as the opening question,
-    # may not contain a reflective cue.
+    # No reflective cue provided.
     return content.strip(), ""
 
 def extract_progress(content: str) -> Tuple[str, Dict[str, str]]:

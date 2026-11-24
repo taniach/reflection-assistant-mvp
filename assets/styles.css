@@ -265,3 +265,230 @@
         margin-bottom: 18px;
     }
 }
+
+/* Reflection readiness card */
+
+.st-key-reflection_ready {
+    background: var(--color-cream);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-amber);
+    border-radius: var(--radius-large);
+    padding: 20px;
+    box-shadow: var(--shadow-soft);
+}
+
+.st-key-reflection_ready h3 {
+    color: var(--color-text);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.st-key-reflection_ready button {
+    border-radius: var(--radius-medium);
+    font-weight: 500;
+    min-height: 44px;
+}
+
+/* ============================================================
+   Reflection journey component
+   ============================================================ */
+
+.journey-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-soft);
+}
+
+
+/* Header */
+
+.journey-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.journey-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.journey-count {
+    font-size: 13px;
+    color: #A77B35;
+}
+
+
+/* Progress bar */
+
+.journey-progress {
+    appearance: none;
+    width: 100%;
+    height: 7px;
+    border: none;
+    border-radius: 20px;
+    background: var(--color-cream);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.journey-progress::-webkit-progress-bar {
+    background: var(--color-cream);
+    border-radius: 20px;
+}
+
+.journey-progress::-webkit-progress-value {
+    background: var(--color-amber);
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+.journey-progress::-moz-progress-bar {
+    background: var(--color-amber);
+    border-radius: 20px;
+}
+
+
+/* Reflective domain rows */
+
+.journey-domains {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.journey-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.journey-label {
+    font-size: 14px;
+    flex: 1;
+}
+
+.journey-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    font-size: 17px;
+}
+
+
+/* Explored domain */
+
+.journey-row.explored .journey-icon {
+    color: #64936A;
+    border: 1.5px solid #64936A;
+    border-radius: 50%;
+    font-size: 13px;
+}
+
+.journey-row.explored .journey-label {
+    color: var(--color-text);
+}
+
+
+/* Currently exploring */
+
+.journey-row.exploring .journey-icon {
+    color: var(--color-amber);
+}
+
+.journey-row.exploring .journey-label {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.journey-status {
+    font-size: 12px;
+    color: #B37720;
+}
+
+
+/* Pending domain */
+
+.journey-row.pending .journey-icon {
+    color: #CFC7B7;
+}
+
+.journey-row.pending .journey-label {
+    color: #A39887;
+}
+
+
+/* Footer */
+
+.journey-footer {
+    border-top: 1px solid var(--color-border);
+    margin-top: 18px;
+    padding-top: 14px;
+    font-size: 12px;
+    color: var(--color-muted);
+}
+
+/* ============================================================
+   Floating reflection journey panel
+   ============================================================ */
+
+.st-key-floating_journey {
+    position: fixed;
+    top: 120px;
+    right: 24px;
+    width: 300px;
+    z-index: 20;
+}
+
+
+/* Compact styling for the floating card */
+
+.st-key-floating_journey .journey-card {
+    padding: 18px;
+    margin-bottom: 0;
+}
+
+.st-key-floating_journey .journey-title {
+    font-size: 16px;
+}
+
+.st-key-floating_journey .journey-label {
+    font-size: 13px;
+}
+
+.st-key-floating_journey .journey-domains {
+    gap: 14px;
+}
+
+.st-key-floating_journey .journey-header {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+/* ============================================================
+   Responsive layout
+   ============================================================ */
+
+/*
+   Return the journey panel to normal document flow on
+   smaller screens to prevent it overlapping the chat.
+*/
+
+@media (max-width: 1450px) {
+    .st-key-floating_journey {
+        position: static;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+}

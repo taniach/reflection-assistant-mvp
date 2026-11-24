@@ -1,26 +1,107 @@
 /* Selected theme card */
+/* =========================
+   Design tokens
+   ========================= */
+
+:root {
+    --color-orange: #FF7520;
+    --color-amber: #FFAB30;
+    --color-yellow: #FFDE38;
+    --color-ivory: #FBFAEF;
+    --color-cream: #FAF4D9;
+    --color-white: #FFFFFF;
+
+    --color-text: #392B1D;
+    --color-muted: #948575;
+    --color-border: #E8D5AA;
+
+    --radius-large: 24px;
+    --radius-medium: 12px;
+
+    --shadow-soft: 0 6px 24px rgba(150, 100, 30, 0.08);
+}
+
+
+/* =========================
+   Reflection chat input
+   ========================= */
+
+.st-key-reflection_input {
+    background: var(--color-white);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    transition: box-shadow 0.2s ease;
+}
+
+/* Focus effect */
+
+.st-key-reflection_input:focus-within {
+    box-shadow: 0 0 0 4px rgba(255, 171, 48, 0.12);
+}
+
+
+/* Text input */
+
+.st-key-reflection_input textarea {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-text);
+    background: transparent;
+}
+
+.st-key-reflection_input textarea::placeholder {
+    color: var(--color-muted);
+}
+
+
+/* Send button */
+
+.st-key-reflection_input button {
+    background: var(--color-amber);
+    color: var(--color-text);
+    border: none;
+    border-radius: var(--radius-medium);
+    transition: background 0.2s ease,
+                transform 0.2s ease;
+}
+
+.st-key-reflection_input button:hover:not(:disabled) {
+    background: var(--color-orange);
+    transform: translateY(-2px);
+}
+
+.st-key-reflection_input button:disabled {
+    background: var(--color-cream);
+    color: var(--color-muted);
+}
+
+.st-key-reflection_input button:active:not(:disabled) {
+    transform: scale(0.95);
+}
 
 .theme-card {
-    background-color: #fff0b6;
-    border: 1px solid #FFAC33;
-    border-radius: 12px;
-    padding: 16px 20px;
+    background: var(--color-cream);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-amber);
+    border-radius: var(--radius-medium);
+    padding: 18px 22px;
     margin-bottom: 20px;
+    box-shadow: var(--shadow-soft);
 }
 
 .theme-label {
-    color: #888888;
-    font-size: 12px;
+    color: #B37720;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
 }
 
 .theme-value {
-    color: #171B3D;
+    color: var(--color-text);
     font-size: 18px;
     font-weight: 600;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
 .app-header {
@@ -54,4 +135,133 @@
     font-size: 1rem;
     color: #4A4A68;
     line-height: 1.5;
+}
+
+/* Reflective cue divider */
+
+.reflective-divider {
+    border: none;
+    border-top: 1px solid #E0DCEC;
+    margin: 12px 0 6px 0;
+}
+
+/* =========================
+   Conversation layout
+   ========================= */
+
+.chat-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.assistant-row {
+    justify-content: flex-start;
+}
+
+.user-row {
+    justify-content: flex-end;
+}
+
+
+/* =========================
+   Mascot avatar
+   ========================= */
+
+.chat-avatar {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   Chat bubbles
+   ========================= */
+
+.chat-bubble {
+    padding: 18px 22px;
+    max-width: 85%;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}
+
+.assistant-bubble {
+    background: var(--color-white);
+    border: 1px solid #E8DCC4;
+    border-radius: 6px 20px 20px 20px;
+    box-shadow: var(--shadow-soft);
+}
+
+.user-bubble {
+    background: #FAEDCB;
+    border: 1px solid #EFE0B7;
+    border-radius: 20px 6px 20px 20px;
+}
+
+
+/* =========================
+   Message typography
+   ========================= */
+
+.chat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #A77B35;
+    margin-bottom: 6px;
+}
+
+.chat-content {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text);
+    white-space: pre-wrap;
+}
+
+
+/* =========================
+   Reflective cues
+   ========================= */
+
+.reflective-cue {
+    border-top: 1px solid #ECE5D8;
+    margin-top: 14px;
+    padding-top: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cue-icon {
+    font-size: 16px;
+    color: #B89B65;
+}
+
+
+/* =========================
+   Mobile responsiveness
+   ========================= */
+
+@media (max-width: 600px) {
+    .chat-bubble {
+        max-width: 88%;
+        padding: 14px 16px;
+    }
+
+    .chat-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .chat-row {
+        gap: 8px;
+        margin-bottom: 18px;
+    }
 }

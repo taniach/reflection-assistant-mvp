@@ -9,6 +9,7 @@ from prompts import BASE, QUESTION, DRAFT, FEEDBACK
 from html import escape
 from PIL import Image
 from base64 import b64encode
+from components import render_message
 
 ROOT = Path(__file__).parent
 ICON_PATH = Path(__file__).parent / "assets" / "mascot.png"
@@ -120,8 +121,10 @@ elif s.step==2:
         </div>
     """, unsafe_allow_html=True)
     st.caption('One question at a time. You can skip a question, continue or stop.')
-    for m in s.messages:
-        with st.chat_message(m['role']): st.write(m['content'])
+
+    for message in s.messages:
+        render_message(message)
+            
     count=sum(m['role']=='user' for m in s.messages)
     pending=s.messages[-1]['role']=='user'
     if pending:
@@ -129,7 +132,10 @@ elif s.step==2:
             reply=call(QUESTION,s.messages)
             if reply: s.messages.append({'role':'assistant','content':reply}); st.rerun()
     elif count<12:
-        text=st.chat_input('Share your thoughts (or type skip)',max_chars=3000)
+        text = st.chat_input(
+            "Share your thoughts...",
+            key="reflection_input"
+        )
         if text:
             s.messages.append({'role':'user','content':text})
             reply=call(QUESTION,s.messages)
@@ -149,6 +155,8 @@ elif s.step==3:
     st.header('Your reflection')
     st.caption('AI-generated draft. Review for accuracy and ownership. Follow your school’s AI-use rules before submitting anything.')
     edited=st.text_area('Edit your reflection',value=s.draft,height=360,key='edited')
+    word_count = len(edited.split())
+    st.caption(f"Word count: {word_count} words")
     st.download_button('Download reflection',edited,file_name='reflection.txt')
     if st.button('View personalised insights',type='primary'):
         feedback=call(FEEDBACK,s.messages)

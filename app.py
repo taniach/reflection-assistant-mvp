@@ -23,13 +23,25 @@ from PIL import Image
 from pypdf import PdfReader
 
 from prompts import BASE, DRAFT, FEEDBACK, QUESTION
+
 from components import (
+    # Guided conversation components
     render_message,
     extract_readiness,
     extract_progress,
     render_reflection_journey,
     scroll_to_readiness,
+
+    # Reflection summary components
+    parse_feedback,
+    render_completion_banner,
+    render_reflective_themes,
+    render_strengths,
+    render_growth_areas,
+    render_wellbeing_check,
+    render_closing_banner,
 )
+
 
 # ============================================================
 # 2. CONFIGURATION
@@ -42,7 +54,7 @@ CSS_PATH = ASSETS_DIR / "styles.css"
 DEFAULT_RUBRIC_PATH = ROOT / "rubric.txt"
 
 TOTAL_STEPS = 4
-MIN_DRAFT_RESPONSES = 3
+MIN_DRAFT_RESPONSES = 2
 MAX_RUBRIC_CHARACTERS = 40_000
 DEFAULT_MODEL = "gpt-4.1-mini"
 MAX_OUTPUT_TOKENS = 1800
@@ -571,55 +583,96 @@ def render_reflection_editor() -> None:
         go(2)
 
 
+
 # ============================================================
-# 10. STEP 4 — INSIGHTS & WELL-BEING
+# STEP 4 — REFLECTION SUMMARY AND WELL-BEING
 # ============================================================
-
-def render_wellbeing_check() -> None:
-    """Provide a local, optional self-check without sending it to the AI."""
-    with st.container(border=True):
-        st.subheader("♡ Well-being check")
-        st.caption(
-            "Optional self-check. Your response is not sent to the AI; "
-            "nobody is automatically notified."
-        )
-        choice = st.radio(
-            "How are you feeling?",
-            ["Doing okay", "A bit overwhelmed", "Not coping well"],
-            index=None,
-            key="wellbeing",
-        )
-
-        if choice == "Doing okay":
-            st.success(
-                "That is good to hear. Remember to check in with yourself "
-                "and take breaks as needed."
-            )
-        elif choice == "A bit overwhelmed":
-            st.warning(
-                "Consider speaking to a friend. Don’t hesitate to reach out "
-                "to Student Affairs or a faculty mentor if you need further support."
-            )
-        elif choice == "Not coping well":
-            st.error(
-                "I am sorry to hear that. Please know there are people to help you. "
-                "Please feel free to reach out to Student Affairs, your faculty "
-                "mentor or qualified health professional. If you are in immediate "
-                "danger, contact 995 and a trusted person now."
-            )
-
 
 def render_reflection_summary() -> None:
-    """Display personalised feedback and the final reflection download."""
-    st.header("Reflection summary")
-    with st.container(border=True):
-        st.markdown(s.feedback)
+    """
+    Render the student's personalised reflection report.
+
+    AI-generated feedback is presented as structured
+    visual cards.
+
+    The optional well-being check remains independent
+    of the AI.
+    """
+
+    # --------------------------------------------------------
+    # Completion banner
+    # --------------------------------------------------------
+
+    render_completion_banner()
+
+    st.header("Your reflection summary")
+
+    st.caption(
+        "Personalised insights from your reflective conversation."
+    )
+
+    # --------------------------------------------------------
+    # Personalised reflective feedback
+    # --------------------------------------------------------
+
+    feedback = parse_feedback(s.feedback)
+
+    if feedback:
+
+        render_reflective_themes(feedback)
+
+        render_strengths(feedback)
+
+        render_growth_areas(feedback)
+
+    else:
+
+        # Support feedback generated before the JSON update.
+        with st.container(border=True):
+
+            st.markdown(s.feedback)
+
+    # --------------------------------------------------------
+    # Optional well-being check
+    # --------------------------------------------------------
 
     render_wellbeing_check()
-    st.download_button("Download reflection", s.draft, file_name="reflection.txt")
 
-    if st.button("Return to reflection"):
-        go(3)
+    # --------------------------------------------------------
+    # Closing illustration and message
+    # --------------------------------------------------------
+
+    render_closing_banner()
+
+    # --------------------------------------------------------
+    # Navigation controls
+    # --------------------------------------------------------
+
+    with st.container(
+        horizontal=True,
+        horizontal_alignment="distribute",
+        vertical_alignment="center"
+    ):
+
+        if st.button(
+            "← Return to reflection",
+            key="return_to_reflection"
+        ):
+            go(3)
+
+        st.download_button(
+            "↓ Download reflection",
+            data=s.get("edited", s.draft),
+            file_name="reflection.txt",
+            mime="text/plain",
+            key="download_final_reflection",
+            type="primary"
+        )
+
+    st.caption(
+        "Mirror Bot · Your experiences. "
+        "Your insights. Your professional growth."
+    )
 
 
 # ============================================================

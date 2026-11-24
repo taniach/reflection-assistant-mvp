@@ -492,3 +492,817 @@
         margin-bottom: 12px;
     }
 }
+
+
+/* ============================================================
+   REFLECTION SUMMARY — DESIGN TOKENS
+   ============================================================ */
+
+:root {
+    --summary-white: #FFFFFF;
+    --summary-text: #392B1D;
+    --summary-muted: #948575;
+    --summary-border: #E8D5AA;
+
+    --summary-cream: #FAF4D9;
+    --summary-amber: #FFAB30;
+
+    --summary-radius: 20px;
+    --summary-inner-radius: 13px;
+
+    --summary-green-bg: #F3F7EF;
+    --summary-green-border: #D5E3CF;
+    --summary-green-text: #34583A;
+    --summary-green-icon: #64936A;
+
+    --summary-amber-bg: #FFFAEB;
+    --summary-amber-border: #EDDBAA;
+    --summary-amber-text: #79551E;
+
+    --summary-red-bg: #FFF0F0;
+    --summary-red-border: #EACACA;
+    --summary-red-text: #A65D5D;
+
+    --summary-shadow:
+        0 4px 20px rgba(94, 72, 35, 0.045);
+}
+
+
+/* ============================================================
+   COMPLETION BANNER
+   ============================================================ */
+
+.completion-banner {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    background: linear-gradient(
+        120deg,
+        #FFF8E8 0%,
+        #FAEDCB 100%
+    );
+
+    border: 1px solid var(--summary-border);
+    border-radius: var(--summary-radius);
+
+    padding: 28px;
+    margin-bottom: 16px;
+
+    box-shadow: var(--summary-shadow);
+
+    animation: summary-fade-in 0.5s ease both;
+}
+
+.completion-banner::after {
+    content: "";
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    right: -65px;
+    top: -85px;
+
+    border: 30px solid rgba(255, 171, 48, 0.08);
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.completion-content {
+    flex: 1;
+    min-width: 0;
+    z-index: 1;
+}
+
+.completion-label {
+    color: #58754E;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+
+    margin-bottom: 13px;
+}
+
+.completion-title {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    color: var(--summary-text);
+
+    margin-bottom: 12px;
+}
+
+.completion-description {
+    color: #806747;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.completion-mascot {
+    width: 115px;
+    height: 140px;
+
+    object-fit: contain;
+    flex-shrink: 0;
+    z-index: 1;
+
+    filter: drop-shadow(
+        0 6px 6px rgba(140, 95, 32, 0.12)
+    );
+
+    animation: mascot-arrive 0.65s ease both;
+}
+
+
+/* ============================================================
+   SHARED FEEDBACK CARDS
+   ============================================================ */
+
+.feedback-card {
+    border: 1px solid var(--summary-border);
+    border-radius: var(--summary-radius);
+
+    padding: 24px;
+    margin-bottom: 12px;
+
+    box-shadow: var(--summary-shadow);
+
+    animation: summary-fade-in 0.45s ease both;
+}
+
+.feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+.feedback-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+
+    background: #FFF0D4;
+    color: #B37720;
+
+    border-radius: 14px;
+}
+
+.feedback-heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.feedback-title {
+    font-size: 19px;
+    font-weight: 650;
+    line-height: 1.35;
+
+    color: var(--summary-text);
+}
+
+.feedback-subtitle {
+    color: var(--summary-muted);
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    margin-top: 4px;
+}
+
+.feedback-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* ============================================================
+   REFLECTIVE THEMES
+   ============================================================ */
+
+.summary-themes-card {
+    background: var(--summary-white);
+}
+
+.summary-theme-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+.summary-theme-tag {
+    display: inline-flex;
+    align-items: center;
+
+    background: #FAF4D9;
+    border: 1px solid #EFDFB5;
+    border-radius: 30px;
+
+    padding: 7px 14px;
+
+    color: #91621F;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.central-insight {
+    background: #FBF9F2;
+
+    border-left: 3px solid var(--summary-amber);
+    border-radius: var(--summary-inner-radius);
+
+    padding: 17px 18px;
+}
+
+.insight-label {
+    color: #96702F;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    margin-bottom: 8px;
+}
+
+.insight-text {
+    color: #665035;
+
+    font-size: 14px;
+    line-height: 1.75;
+}
+
+
+/* ============================================================
+   REFLECTIVE STRENGTHS
+   ============================================================ */
+
+.strengths-card {
+    background: var(--summary-green-bg);
+    border-color: var(--summary-green-border);
+
+    animation-delay: 0.08s;
+}
+
+.strengths-card .feedback-icon {
+    background: #E1EDDA;
+    color: #56845B;
+}
+
+.strengths-card .feedback-title {
+    color: var(--summary-green-text);
+}
+
+.strengths-card .feedback-subtitle {
+    color: #70836C;
+}
+
+.strength-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+
+    background: var(--summary-white);
+
+    border: 1px solid #E0E9DB;
+    border-radius: var(--summary-inner-radius);
+
+    padding: 16px;
+}
+
+.strength-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+
+    background: #EAF2E5;
+    color: var(--summary-green-icon);
+
+    border-radius: 50%;
+}
+
+.strength-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.strength-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.strength-title {
+    font-size: 14px;
+    font-weight: 650;
+
+    color: var(--summary-green-text);
+
+    margin-bottom: 6px;
+}
+
+.strength-description {
+    font-size: 14px;
+    line-height: 1.65;
+
+    color: #52684F;
+}
+
+.strength-check {
+    color: #7C9D73;
+    flex-shrink: 0;
+}
+
+.strength-check svg {
+    width: 17px;
+    height: 17px;
+}
+
+
+/* ============================================================
+   AREAS FOR FURTHER REFLECTION
+   ============================================================ */
+
+.growth-card {
+    background: var(--summary-amber-bg);
+    border-color: var(--summary-amber-border);
+
+    animation-delay: 0.16s;
+}
+
+.growth-card .feedback-icon {
+    background: #FFEDBD;
+    color: #C18A26;
+}
+
+.growth-card .feedback-title {
+    color: var(--summary-amber-text);
+}
+
+.growth-card .feedback-subtitle {
+    color: #8E7750;
+}
+
+.growth-item {
+    background: var(--summary-white);
+
+    border: 1px solid #F0E4C7;
+    border-radius: var(--summary-inner-radius);
+
+    padding: 16px;
+}
+
+.growth-item-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.growth-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+
+    background: #FFF0D4;
+    color: #B37720;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.growth-title {
+    color: var(--summary-amber-text);
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.growth-question {
+    color: #796344;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.growth-footer {
+    color: #8E7750;
+
+    font-size: 12px;
+    font-style: italic;
+    line-height: 1.6;
+
+    margin-top: 17px;
+}
+
+
+/* ============================================================
+   WELL-BEING CHECK
+   ============================================================ */
+
+.st-key-wellbeing_card {
+    background: var(--summary-white);
+
+    border: 1px solid var(--summary-border);
+    border-radius: var(--summary-radius);
+
+    padding: 24px;
+    margin-bottom: 12px;
+
+    box-shadow: var(--summary-shadow);
+}
+
+.st-key-wellbeing_card .feedback-header {
+    margin-bottom: 0;
+}
+
+
+/* Shared emotion button styling */
+
+.st-key-mood_okay button,
+.st-key-mood_okay_selected button,
+.st-key-mood_overwhelmed button,
+.st-key-mood_overwhelmed_selected button,
+.st-key-mood_distressed button,
+.st-key-mood_distressed_selected button {
+
+    min-height: 115px;
+    padding: 15px 10px;
+
+    border-radius: 16px;
+
+    font-size: 13px;
+    font-weight: 550;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+}
+
+.st-key-mood_okay button:hover,
+.st-key-mood_overwhelmed button:hover,
+.st-key-mood_distressed button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 6px 14px rgba(80, 60, 30, 0.07);
+}
+
+
+/* Doing okay — sage green */
+
+.st-key-mood_okay button,
+.st-key-mood_okay_selected button {
+
+    background: #EEF5E9;
+    color: #56845B;
+
+    border: 1px solid #D5E3CF;
+}
+
+.st-key-mood_okay button:hover,
+.st-key-mood_okay_selected button {
+    background: #E1EFDA;
+    color: #34583A;
+
+    border-color: #64936A;
+}
+
+
+/* A bit overwhelmed — warm amber */
+
+.st-key-mood_overwhelmed button,
+.st-key-mood_overwhelmed_selected button {
+
+    background: #FFFAEC;
+    color: #A0782B;
+
+    border: 1px solid #EEDDB5;
+}
+
+.st-key-mood_overwhelmed button:hover,
+.st-key-mood_overwhelmed_selected button {
+
+    background: #FFF0D4;
+    color: #79551E;
+
+    border-color: #D9A34F;
+}
+
+
+/* Not coping well — soft red */
+
+.st-key-mood_distressed button,
+.st-key-mood_distressed_selected button {
+
+    background: var(--summary-red-bg);
+    color: var(--summary-red-text);
+
+    border: 1px solid var(--summary-red-border);
+}
+
+.st-key-mood_distressed button:hover,
+.st-key-mood_distressed_selected button {
+
+    background: #FCE2E2;
+    color: #954B4B;
+
+    border-color: #C56868;
+}
+
+
+/* Persistent selected state */
+
+.st-key-mood_okay_selected button,
+.st-key-mood_overwhelmed_selected button,
+.st-key-mood_distressed_selected button {
+    border-width: 2px;
+}
+
+
+/* Supportive response */
+
+.wellbeing-response {
+    padding: 17px;
+    margin-top: 8px;
+
+    border-radius: var(--summary-inner-radius);
+
+    animation: summary-fade-in 0.3s ease both;
+}
+
+.wellbeing-response.okay {
+    background: #EEF5E9;
+    color: var(--summary-green-text);
+}
+
+.wellbeing-response.overwhelmed {
+    background: #FFFAEC;
+    color: var(--summary-amber-text);
+}
+
+.wellbeing-response.distressed {
+    background: var(--summary-red-bg);
+    color: var(--summary-red-text);
+}
+
+.wellbeing-response-title {
+    font-size: 14px;
+    font-weight: 650;
+
+    margin-bottom: 7px;
+}
+
+.wellbeing-response-message {
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.wellbeing-privacy {
+    border-top: 1px solid #EEE5D3;
+
+    margin-top: 10px;
+    padding-top: 14px;
+
+    font-size: 11px;
+    color: var(--summary-muted);
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   CLOSING BANNER
+   ============================================================ */
+
+.closing-banner {
+    background: linear-gradient(
+        180deg,
+        #FBF7E5,
+        #FAF0CE
+    );
+
+    border: 1px solid #EFE3C1;
+    border-radius: var(--summary-radius);
+
+    padding: 28px 20px;
+    margin-bottom: 16px;
+
+    text-align: center;
+}
+
+.closing-illustration {
+    max-width: 240px;
+    margin: 0 auto 18px;
+}
+
+.closing-landscape {
+    display: block;
+    width: 240px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+}
+
+.closing-title {
+    color: #796344;
+
+    font-size: 20px;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.5;
+
+    margin-bottom: 8px;
+}
+
+.closing-subtitle {
+    color: var(--summary-muted);
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   SUBTLE ANIMATIONS
+   ============================================================ */
+
+@keyframes summary-fade-in {
+
+    from {
+        opacity: 0;
+        transform: translateY(9px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes mascot-arrive {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px) rotate(-6deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) rotate(0);
+    }
+}
+
+
+/* Respect reduced-motion accessibility settings */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .completion-banner,
+    .completion-mascot,
+    .feedback-card,
+    .wellbeing-response {
+        animation: none;
+    }
+
+    .st-key-wellbeing_card button {
+        transition: none;
+    }
+
+    .st-key-wellbeing_card button:hover {
+        transform: none;
+    }
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVENESS
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .completion-banner {
+        padding: 20px;
+        gap: 12px;
+    }
+
+    .completion-title {
+        font-size: 23px;
+    }
+
+    .completion-description {
+        font-size: 13px;
+    }
+
+    .completion-mascot {
+        width: 75px;
+        height: 105px;
+    }
+
+    .feedback-card,
+    .st-key-wellbeing_card {
+        padding: 18px;
+    }
+
+    .feedback-title {
+        font-size: 17px;
+    }
+
+    .feedback-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .strength-item,
+    .growth-item {
+        padding: 13px;
+    }
+
+    .strength-check {
+        display: none;
+    }
+
+    .st-key-wellbeing_card button {
+        font-size: 12px;
+    }
+
+    .closing-title {
+        font-size: 17px;
+    }
+}
+
+/* ============================================================
+   SUMMARY ICON RENDERING FIX
+   ============================================================ */
+
+.summary-svg-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+
+/* Reflective themes and well-being — warm amber */
+
+.feedback-icon .summary-svg-icon {
+    filter: invert(49%) sepia(63%)
+            saturate(690%) hue-rotate(356deg)
+            brightness(94%) contrast(89%);
+}
+
+
+/* Strengths — sage green */
+
+.strengths-card .summary-svg-icon {
+    filter: invert(49%) sepia(19%)
+            saturate(750%) hue-rotate(75deg)
+            brightness(96%) contrast(88%);
+}
+
+
+/* Areas for further reflection — golden amber */
+
+.growth-card .summary-svg-icon {
+    filter: invert(60%) sepia(76%)
+            saturate(526%) hue-rotate(359deg)
+            brightness(92%) contrast(89%);
+}
+
+
+/* Smaller icons inside individual strength cards */
+
+.strength-icon .summary-svg-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.strength-check .summary-svg-icon {
+    width: 17px;
+    height: 17px;
+}

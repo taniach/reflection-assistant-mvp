@@ -425,3 +425,699 @@ def render_reflection_journey(
 
         </div>
     """)
+
+
+# ============================================================
+# 11. FEEDBACK RESPONSE PROCESSING
+# ============================================================
+
+def parse_feedback(content: str) -> Dict:
+    """
+    Parse and validate the AI's structured feedback.
+
+    Supports plain JSON and JSON enclosed in Markdown
+    code fences.
+
+    Returns an empty dictionary if the response is invalid,
+    allowing the application to display a fallback.
+    """
+
+    if not isinstance(content, str):
+        return {}
+
+    try:
+
+        # Remove optional Markdown code fences.
+        content = re.sub(
+            r"^```(?:json)?\s*|\s*```$",
+            "",
+            content.strip(),
+            flags=re.IGNORECASE
+        )
+
+        feedback = json.loads(content)
+
+        if not isinstance(feedback, dict):
+            return {}
+
+        # Validate reflective themes.
+        themes = feedback.get("themes")
+
+        if not isinstance(themes, list):
+            return {}
+
+        if not all(
+            isinstance(theme, str)
+            for theme in themes
+        ):
+            return {}
+
+        # Validate central insight.
+        if not isinstance(
+            feedback.get("central_insight"), str
+        ):
+            return {}
+
+        # Validate strengths and growth areas.
+        for field, text_key in (
+            ("strengths", "description"),
+            ("growth_areas", "question"),
+        ):
+
+            items = feedback.get(field)
+
+            if not isinstance(items, list):
+                return {}
+
+            if not all(
+                isinstance(item, dict)
+                and isinstance(item.get("title"), str)
+                and isinstance(item.get(text_key), str)
+                for item in items
+            ):
+                return {}
+
+        return feedback
+
+    except (json.JSONDecodeError, TypeError, AttributeError):
+
+        return {}
+
+
+# ============================================================
+# 12. REFLECTION COMPLETION BANNER
+# ============================================================
+
+def render_completion_banner() -> None:
+    """
+    Celebrate the student's reflective journey without
+    implying a formal assessment result.
+    """
+
+    mascot = get_mascot()
+
+    st.html(f"""
+        <div class="completion-banner">
+
+            <div class="completion-content">
+
+                <div class="completion-label">
+                    ✓ REFLECTION COMPLETE
+                </div>
+
+                <div class="completion-title">
+                    A moment of growth.
+                </div>
+
+                <div class="completion-description">
+                    You've taken time to explore your
+                    experiences, consider your perspectives
+                    and reflect on the physician you
+                    are becoming.
+                </div>
+
+            </div>
+
+            <img
+                src="data:image/png;base64,{mascot}"
+                class="completion-mascot"
+                alt="Mirror Bot mascot"
+            />
+
+        </div>
+    """)
+
+
+# ============================================================
+# 13. SUMMARY ICONS AND SHARED COMPONENTS
+# ============================================================
+
+SUMMARY_ICONS = {
+
+    "sparkles": """
+        <path d="M12 3L14.5 9.5L21 12L14.5 14.5
+                 L12 21L9.5 14.5L3 12L9.5 9.5Z"/>
+        <path d="M5 3V7M3 5H7M19 17V21M17 19H21"/>
+    """,
+
+    "sprout": """
+        <path d="M12 22V12"/>
+        <path d="M12 12C5 12 3 8 3 3
+                 C9 3 12 6 12 12Z"/>
+        <path d="M12 16C12 9 16 6 22 6
+                 C22 12 18 16 12 16Z"/>
+        <path d="M5 22H19"/>
+    """,
+
+    "lightbulb": """
+        <path d="M9 18H15M10 22H14"/>
+        <path d="M8 14C5 12 4 10 5 7
+                 C7 0 17 0 19 7
+                 C20 10 19 12 16 14
+                 L15 18H9Z"/>
+    """,
+
+    "heart": """
+        <path d="M20.8 4.6
+                 C18.5 2.3 14.5 3.2 12 6
+                 C9.5 3.2 5.5 2.3 3.2 4.6
+                 C-1 9 5 15 12 21
+                 C19 15 25 9 20.8 4.6Z"/>
+    """,
+
+    "check": """
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M8 12L11 15L16 9"/>
+    """,
+
+    "users": """
+        <circle cx="9" cy="7" r="3"/>
+        <path d="M2 21V18A7 7 0 0 1 16 18V21"/>
+        <path d="M17 4A3 3 0 0 1 17 10"/>
+        <path d="M18 14C21 15 22 17 22 21"/>
+    """,
+
+    "growth": """
+        <path d="M3 18L10 11L14 15L21 5"/>
+        <path d="M15 5H21V11"/>
+    """,
+}
+
+
+def summary_icon(name: str) -> str:
+    """
+    Render an SVG icon as a Base64-encoded image.
+
+    This avoids issues with Streamlit sanitising
+    inline SVG markup.
+    """
+
+    paths = SUMMARY_ICONS.get(
+        name,
+        SUMMARY_ICONS["sparkles"]
+    )
+
+    svg = f"""
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="#000000"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            {paths}
+        </svg>
+    """
+
+    encoded = b64encode(
+        svg.encode("utf-8")
+    ).decode("utf-8")
+
+    return f"""
+        <img
+            src="data:image/svg+xml;base64,{encoded}"
+            class="summary-svg-icon"
+            alt=""
+        />
+    """
+
+
+def build_feedback_header(
+    icon: str,
+    title: str,
+    subtitle: str
+) -> str:
+    """
+    Build a consistent heading for each summary card.
+    """
+
+    return f"""
+        <div class="feedback-header">
+
+            <div class="feedback-icon">
+                {summary_icon(icon)}
+            </div>
+
+            <div class="feedback-heading">
+
+                <div class="feedback-title">
+                    {escape(title)}
+                </div>
+
+                <div class="feedback-subtitle">
+                    {escape(subtitle)}
+                </div>
+
+            </div>
+
+        </div>
+    """
+
+# ============================================================
+# 14. REFLECTIVE THEMES CARD
+# ============================================================
+
+def render_reflective_themes(feedback: Dict) -> None:
+    """
+    Display reflective themes as compact tags and
+    highlight the student's central insight.
+    """
+
+    themes = feedback.get("themes", [])
+    insight = feedback.get("central_insight", "")
+
+    header = build_feedback_header(
+        "sparkles",
+        "Reflective themes",
+        "The ideas at the heart of your experience"
+    )
+
+    tags = "".join(
+        f'<span class="summary-theme-tag">'
+        f'{escape(theme)}</span>'
+        for theme in themes
+    )
+
+    st.html(f"""
+        <div class="feedback-card summary-themes-card">
+
+            {header}
+
+            <div class="summary-theme-tags">
+                {tags}
+            </div>
+
+            <div class="central-insight">
+
+                <div class="insight-label">
+                    YOUR CENTRAL INSIGHT
+                </div>
+
+                <div class="insight-text">
+                    {escape(insight)}
+                </div>
+
+            </div>
+
+        </div>
+    """)
+
+
+# ============================================================
+# 15. REFLECTIVE STRENGTHS CARD
+# ============================================================
+
+def render_strengths(feedback: Dict) -> None:
+    """
+    Display personalised reflective strengths using
+    individual cards and a soft sage-green palette.
+    """
+
+    strengths = feedback.get("strengths", [])
+
+    header = build_feedback_header(
+        "sprout",
+        "Your strengths",
+        "Qualities you demonstrated while reflecting"
+    )
+
+    cards = []
+
+    icons = ["heart", "users", "growth"]
+
+    for index, strength in enumerate(strengths):
+
+        title = escape(strength["title"])
+
+        description = escape(strength["description"])
+
+        icon = icons[index % len(icons)]
+
+        cards.append(f"""
+            <div class="strength-item">
+
+                <div class="strength-icon">
+                    {summary_icon(icon)}
+                </div>
+
+                <div class="strength-content">
+
+                    <div class="strength-title">
+                        {title}
+                    </div>
+
+                    <div class="strength-description">
+                        {description}
+                    </div>
+
+                </div>
+
+                <div class="strength-check">
+                    {summary_icon("check")}
+                </div>
+
+            </div>
+        """)
+
+    empty_message = """
+        <div class="feedback-subtitle">
+            Further reflection may help you identify
+            additional personal insights and strengths.
+        </div>
+    """
+
+    st.html(f"""
+        <div class="feedback-card strengths-card">
+
+            {header}
+
+            <div class="feedback-items">
+                {"".join(cards) if cards else empty_message}
+            </div>
+
+        </div>
+    """)
+
+
+# ============================================================
+# 16. AREAS FOR FURTHER REFLECTION
+# ============================================================
+
+def render_growth_areas(feedback: Dict) -> None:
+    """
+    Present further reflective questions as opportunities
+    for growth rather than academic deficiencies.
+    """
+
+    growth_areas = feedback.get("growth_areas", [])
+
+    header = build_feedback_header(
+        "lightbulb",
+        "Areas to think more about",
+        "A little curiosity can lead to meaningful growth"
+    )
+
+    cards = []
+
+    for index, area in enumerate(growth_areas, start=1):
+
+        title = escape(area["title"])
+
+        question = escape(area["question"])
+
+        cards.append(f"""
+            <div class="growth-item">
+
+                <div class="growth-item-header">
+
+                    <span class="growth-number">
+                        {index:02d}
+                    </span>
+
+                    <span class="growth-title">
+                        {title}
+                    </span>
+
+                </div>
+
+                <div class="growth-question">
+                    {question}
+                </div>
+
+            </div>
+        """)
+
+    empty_message = """
+        <div class="feedback-subtitle">
+            You can revisit this experience whenever
+            you feel ready to explore it further.
+        </div>
+    """
+
+    st.html(f"""
+        <div class="feedback-card growth-card">
+
+            {header}
+
+            <div class="feedback-items">
+                {"".join(cards) if cards else empty_message}
+            </div>
+
+            <div class="growth-footer">
+                You don't need to have all the answers today.
+                These are ideas to carry with you.
+            </div>
+
+        </div>
+    """)
+
+
+# ============================================================
+# 17. WELL-BEING CHECK
+# ============================================================
+
+WELLBEING_OPTIONS = {
+
+    "Doing okay": {
+        "key": "okay",
+        "icon": "☺",
+        "title": "Keep taking care of yourself",
+        "message": (
+            "Remember to make time for yourself as you "
+            "continue your clinical journey."
+        ),
+    },
+
+    "A bit overwhelmed": {
+        "key": "overwhelmed",
+        "icon": "😐",
+        "title": "Give yourself some space",
+        "message": (
+            "Consider taking a break or speaking with "
+            "someone you trust. You may also wish to "
+            "reach out to Student Affairs or a faculty "
+            "mentor for support."
+        ),
+    },
+
+    "Not coping well": {
+        "key": "distressed",
+        "icon": "☹",
+        "title": "Support is available to you",
+        "message": (
+            "Consider reaching out to Student Affairs, "
+            "a faculty mentor or a qualified health "
+            "professional. If you are in immediate "
+            "danger, call 995 and seek emergency assistance."
+        ),
+    },
+}
+
+
+def set_wellbeing(choice: str) -> None:
+    """
+    Store the student's optional emotional check-in.
+    """
+
+    st.session_state.wellbeing = choice
+
+
+def render_wellbeing_check() -> None:
+    """
+    Render an optional, non-diagnostic well-being check.
+
+    The selection remains in session state and does not
+    trigger an AI request or automatic notification.
+    """
+
+    state = st.session_state
+
+    with st.container(key="wellbeing_card"):
+
+        header = build_feedback_header(
+            "heart",
+            "Well-being check",
+            "A moment to check in with yourself"
+        )
+
+        st.html(header)
+
+        st.write(
+            "Having reflected on this experience, "
+            "how are you feeling now?"
+        )
+
+        columns = st.columns(3)
+
+        for column, (label, option) in zip(
+            columns,
+            WELLBEING_OPTIONS.items()
+        ):
+
+            with column:
+
+                selected = state.get("wellbeing") == label
+
+                # The named container controls the button colour.
+                container_key = f"mood_{option['key']}"
+
+                if selected:
+                    container_key += "_selected"
+
+                with st.container(key=container_key):
+
+                    button_label = (
+                        f"{option['icon']}\n\n{label}"
+                    )
+
+                    if selected:
+                        button_label += " ✓"
+
+                    st.button(
+                        button_label,
+                        key=f"select_{option['key']}",
+                        use_container_width=True,
+                        on_click=set_wellbeing,
+                        args=(label,)
+                    )
+
+        # Display guidance for the selected emotional state.
+        choice = state.get("wellbeing")
+
+        if choice in WELLBEING_OPTIONS:
+
+            option = WELLBEING_OPTIONS[choice]
+
+            st.html(f"""
+                <div class="wellbeing-response {option['key']}">
+
+                    <div class="wellbeing-response-title">
+                        {escape(option['title'])}
+                    </div>
+
+                    <div class="wellbeing-response-message">
+                        {escape(option['message'])}
+                    </div>
+
+                </div>
+            """)
+
+            st.button(
+                "Clear selection",
+                key="clear_wellbeing",
+                on_click=set_wellbeing,
+                args=(None,)
+            )
+
+        st.html("""
+            <div class="wellbeing-privacy">
+                ♡ Optional check-in. Your selection is
+                not sent to the AI, and nobody is
+                automatically notified.
+            </div>
+        """)
+
+
+# ============================================================
+# 18. REFLECTION CLOSING BANNER
+# ============================================================
+
+def render_closing_banner() -> None:
+    """
+    Provide a calm and encouraging ending to the
+    student's reflection journey.
+
+    Encode the SVG illustration as an image to avoid
+    inline SVG sanitisation by Streamlit.
+    """
+
+    landscape_svg = """
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 240 85"
+            width="240"
+            height="85"
+        >
+
+            <!-- Sun -->
+            <circle
+                cx="155"
+                cy="23"
+                r="19"
+                fill="#FFD36A"
+            />
+
+            <!-- Distant mountains -->
+            <path
+                d="M0 65 Q35 15 79 54
+                   Q110 0 160 49
+                   Q202 16 240 65 V85 H0Z"
+                fill="#EBD5A1"
+            />
+
+            <!-- Rolling hills -->
+            <path
+                d="M0 72 Q45 37 90 67
+                   Q142 34 184 64
+                   Q218 42 240 67 V85 H0Z"
+                fill="#C9D6AC"
+            />
+
+            <!-- Foreground -->
+            <path
+                d="M0 81 Q57 58 100 79
+                   Q180 58 240 77 V85 H0Z"
+                fill="#A8BC90"
+            />
+
+            <!-- Small plants -->
+            <g
+                stroke="#7E9B6B"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+            >
+                <path d="M45 79V45"/>
+                <path d="M45 59Q30 57 29 45Q40 43 45 59"/>
+                <path d="M45 52Q47 39 58 39Q61 48 45 52"/>
+
+                <path d="M194 79V50"/>
+                <path d="M194 62Q179 57 182 47Q192 47 194 62"/>
+            </g>
+
+        </svg>
+    """
+
+    # Convert the illustration into a Base64 image.
+    encoded_landscape = b64encode(
+        landscape_svg.encode("utf-8")
+    ).decode("utf-8")
+
+    st.html(f"""
+        <div class="closing-banner">
+
+            <div class="closing-illustration">
+
+                <img
+                    src="data:image/svg+xml;base64,{encoded_landscape}"
+                    class="closing-landscape"
+                    alt="A peaceful landscape with rolling hills and sunshine"
+                />
+
+            </div>
+
+            <div class="closing-title">
+                Becoming a physician is a journey.
+            </div>
+
+            <div class="closing-subtitle">
+                One experience, one insight,
+                one reflection at a time.
+            </div>
+
+        </div>
+    """)

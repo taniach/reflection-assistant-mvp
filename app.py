@@ -447,9 +447,6 @@ def render_guided_conversation() -> None:
     # Floating reflection journey panel
     # --------------------------------------------------------
 
-    with st.container(key="floating_journey"):
-        render_reflection_journey(s.reflection_progress)
-
     st.caption(
         "One question at a time. You can skip a question, "
         "continue or stop."
@@ -458,6 +455,9 @@ def render_guided_conversation() -> None:
     # Existing conversation history
     for message in s.messages:
         render_message(message)
+
+    with st.container(key="floating_journey"):
+        render_reflection_journey(s.reflection_progress)
 
     response_count = sum(message["role"] == "user" for message in s.messages)
     last_message = s.messages[-1] if s.messages else None

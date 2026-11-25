@@ -480,12 +480,31 @@
    Responsive layout
    ============================================================ */
 
-/*
-   Return the journey panel to normal document flow on
-   smaller screens to prevent it overlapping the chat.
-*/
+/* Smaller desktop and laptop screens */
 
-@media (max-width: 1450px) {
+@media (max-width: 1450px) and (min-width: 1201px) {
+
+    .st-key-floating_journey {
+        position: fixed;
+        top: 100px;
+        right: 16px;
+        width: 240px;
+    }
+
+    .st-key-floating_journey .journey-label {
+        font-size: 12px;
+    }
+
+    .st-key-floating_journey .journey-card {
+        padding: 14px;
+    }
+}
+
+
+/* Tablets and mobile devices */
+
+@media (max-width: 1200px) {
+
     .st-key-floating_journey {
         position: static;
         width: 100%;
